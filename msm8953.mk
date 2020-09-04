@@ -292,7 +292,9 @@ PRODUCT_PACKAGES += \
     init.target.rc \
     ueventd.qcom.rc \
     init.spectrum.rc \
-    init.spectrum.sh
+    init.spectrum.sh \
+    init.camera.rc \
+    init.camera.sh
 
 PRODUCT_PACKAGES += \
     init.qcom.bt.sh \

@@ -30,7 +30,7 @@ public class DeviceSettings extends PreferenceFragment implements
     private static final String PREF_ENABLE_DIRAC = "dirac_enabled";
     private static final String PREF_HEADSET = "dirac_headset_pref";
     private static final String PREF_PRESET = "dirac_preset_pref";
- 
+
 
     //public static final String PREF_TORCH_BRIGHTNESS = "torch_brightness";
     //private static final String TORCH_1_BRIGHTNESS_PATH = "/sys/devices/soc/800f000.qcom," +
@@ -38,10 +38,14 @@ public class DeviceSettings extends PreferenceFragment implements
     //private static final String TORCH_2_BRIGHTNESS_PATH = "/sys/devices/soc/800f000.qcom," +
     //        "spmi/spmi-0/spmi0-03/800f000.qcom,spmi:qcom,pm660l@3:qcom,leds@d300/leds/led:torch_1/max_brightness";
 
+    private SecureSettingListPreference mCamera;
     private SecureSettingListPreference mSPECTRUM;
 
     public static final String PREF_SPECTRUM = "spectrum";
     public static final String SPECTRUM_SYSTEM_PROPERTY = "persist.spectrum.profile";
+
+    public static final String PREF_CAMERA = "camera";
+    public static final String CAMERA_SYSTEM_PROPERTY = "persist.camera.profile";
 
     public static final String PREF_USB_FASTCHARGE = "fastcharge";
     public static final String USB_FASTCHARGE_PATH = "/sys/kernel/fast_charge/force_fast_charge";
@@ -55,10 +59,17 @@ public class DeviceSettings extends PreferenceFragment implements
         //        FileUtils.fileWritable(TORCH_2_BRIGHTNESS_PATH));
         //torch_brightness.setOnPreferenceChangeListener(this);
 
+        // Spectrum
         mSPECTRUM = (SecureSettingListPreference) findPreference(PREF_SPECTRUM);
         mSPECTRUM.setValue(FileUtils.getStringProp(SPECTRUM_SYSTEM_PROPERTY, "0"));
         mSPECTRUM.setSummary(mSPECTRUM.getEntry());
         mSPECTRUM.setOnPreferenceChangeListener(this);
+
+        // HAL3|HAL1 Switch button profiles
+        mCamera = (SecureSettingListPreference) findPreference(PREF_CAMERA);
+        mCamera.setValue(FileUtils.getStringProp(CAMERA_SYSTEM_PROPERTY, "0"));
+        mCamera.setSummary(mCamera.getEntry());
+        mCamera.setOnPreferenceChangeListener(this);
 
         boolean enhancerEnabled;
         try {
@@ -114,6 +125,12 @@ public class DeviceSettings extends PreferenceFragment implements
             //    FileUtils.setValue(TORCH_1_BRIGHTNESS_PATH, (int) value);
             //    FileUtils.setValue(TORCH_2_BRIGHTNESS_PATH, (int) value);
             //    break;
+
+            case PREF_CAMERA:
+                mCamera.setValue((String) value);
+               	mCamera.setSummary(mCamera.getEntry());
+                FileUtils.setStringProp(CAMERA_SYSTEM_PROPERTY, (String) value);
+                break;
 
 	    case PREF_SPECTRUM:
                 mSPECTRUM.setValue((String) value);
